@@ -1,14 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Input;
 
 using EditorConfigComparer.Models;
 using EditorConfigComparer.Services;
+using EditorConfigComparer.ViewModels.Commands;
 
 using Microsoft.Win32;
 
 namespace EditorConfigComparer.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public class MainViewModel : ViewModelBase, IMainViewModel
 {
     private readonly IEditorConfigReader _configReader;
     private readonly IEditorConfigService _configService;
@@ -22,7 +24,10 @@ public class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         _configReader = new EditorConfigReader();
-        _configService = new EditorConfigService();
+        _configService = EditorConfigService.Instance;
+
+        ExportCommand = new ExportSelectionCommandFactory(this).CreateOrGet();
+        ExitCommand = new ExitCommandFactory().CreateOrGet();
     }
 
     public string LeftFilePath
@@ -55,13 +60,14 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public void ProcessFiles()
+    public bool IsSelectAllRulesEnabled
     {
-        EditorConfig leftConfig = _configReader.Read(LeftFilePath);
-        EditorConfig rightConfig = _configReader.Read(RightFilePath);
-
-        UpdateRulePairs();
+        get => RulePairs.Count > 0;
     }
+
+    public ICommand ExportCommand { get; }
+
+    public RelayCommand ExitCommand { get; }
 
     internal void LoadLeftFile()
     {
@@ -85,11 +91,6 @@ public class MainViewModel : ViewModelBase
             _rightEditorConfig = _configReader.Read(RightFilePath);
             UpdateRulePairs();
         }
-    }
-
-    public bool IsSelectAllRulesEnabled
-    {
-        get => RulePairs.Count > 0;
     }
 
     internal void SelectAllRulesOnTheLeft()

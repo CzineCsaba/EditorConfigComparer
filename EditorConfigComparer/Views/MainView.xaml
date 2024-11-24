@@ -34,50 +34,56 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="4">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <DockPanel Margin="4">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Export selected items" Command="{Binding ExportCommand}" />
+                <Separator />
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
+            </MenuItem>
+        </Menu>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <TextBox Text="{Binding LeftFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                         Style="{StaticResource FilePathInputTextBoxStyle}" />
-                <Button Click="LoadLeftFile" Style="{StaticResource LoadFileButtonStyle}" >Load</Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Click="SelectAllRulesOnTheLeft"
-                        IsEnabled="{Binding IsSelectAllRulesEnabled}"
-                        Style="{StaticResource ButtonStyle}">
-                    Select all
-                </Button>
-            </StackPanel>
-        </StackPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="1" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <TextBox Text="{Binding RightFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                     Style="{StaticResource FilePathInputTextBoxStyle}" />
-                <Button Click="LoadRightFile" Style="{StaticResource LoadFileButtonStyle}">Load</Button>
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <TextBox Text="{Binding LeftFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                 Style="{StaticResource FilePathInputTextBoxStyle}" />
+                    <Button Click="LoadLeftFile" Style="{StaticResource LoadFileButtonStyle}" >Load</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="SelectAllRulesOnTheLeft"
+                IsEnabled="{Binding IsSelectAllRulesEnabled}"
+                Style="{StaticResource ButtonStyle}">
+                        Select all
+                    </Button>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Click="SelectAllRulesOnTheRight"
-                        IsEnabled="{Binding IsSelectAllRulesEnabled}"
-                        Style="{StaticResource ButtonStyle}">
-                    Select all
-                </Button>
+
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <TextBox Text="{Binding RightFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+             Style="{StaticResource FilePathInputTextBoxStyle}" />
+                    <Button Click="LoadRightFile" Style="{StaticResource LoadFileButtonStyle}">Load</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="SelectAllRulesOnTheRight"
+                IsEnabled="{Binding IsSelectAllRulesEnabled}"
+                Style="{StaticResource ButtonStyle}">
+                        Select all
+                    </Button>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </Grid>
 
         <ListBox Grid.Row="1" Grid.ColumnSpan="2" Margin="4"
                  ItemsSource="{Binding RulePairs, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                  ItemTemplate="{StaticResource RulePairItemTemplate}"
                  HorizontalContentAlignment="Stretch">
         </ListBox>
-    </Grid>
+    </DockPanel>
 </Window>
