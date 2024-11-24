@@ -1,8 +1,7 @@
-﻿namespace EditorconfigComparer.Models
+﻿namespace EditorConfigComparer.Models;
+
+internal class EditorConfig
 {
-    internal class EditorConfig
-    {
-        public string FilePath { get; set; } = string.Empty;
-        public Dictionary<string, EditorConfigRule> Rules { get; set; } = new();
-    }
+    public string FilePath { get; set; } = string.Empty;
+    public Dictionary<string, EditorConfigRule> Rules { get; set; } = new();
 }

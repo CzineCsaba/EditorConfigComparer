@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace EditorconfigComparer
+namespace EditorConfigComparer
 {
     /// <summary>
     /// Interaction logic for App.xaml

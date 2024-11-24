@@ -1,6 +1,6 @@
-﻿using EditorconfigComparer.Models;
+﻿using EditorConfigComparer.Models;
 
-namespace EditorconfigComparer.Services
+namespace EditorConfigComparer.Services
 {
     internal interface IEditorConfigService
     {

@@ -1,56 +1,60 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace EditorconfigComparer.Models
+namespace EditorConfigComparer.Models;
+
+public class EditorConfigRule : IEquatable<EditorConfigRule>
 {
-    public class EditorConfigRule : IEquatable<EditorConfigRule>
+    private IList<EditorConfigScopedRule> _scopedRules = new List<EditorConfigScopedRule>();
+
+    public EditorConfigRule(string key)
     {
-        private IList<EditorConfigScopedRule> _scopedRules = new List<EditorConfigScopedRule>();
+        RuleId = key;
+    }
 
-        public EditorConfigRule(string key)
-        {
-            RuleId = key;
-        }
+    public string RuleId { get; }
 
-        public string RuleId { get; }
+    public IReadOnlyList<EditorConfigScopedRule> ScopedRules
+    {
+        get => (IReadOnlyList<EditorConfigScopedRule>)_scopedRules;
+    }
 
-        public IReadOnlyList<EditorConfigScopedRule> ScopedRules
-        {
-            get => (IReadOnlyList<EditorConfigScopedRule>)_scopedRules;
-        }
+    public bool Equals(EditorConfigRule? other)
+    {
+        if (null == other)
+            return false;
 
-        public bool Equals(EditorConfigRule? other)
-        {
-            if (null == other)
-                return false;
+        if (ReferenceEquals(this, other))
+            return true;
 
-            if (ReferenceEquals(this, other))
-                return true;
+        return RuleId == other.RuleId && ScopedRules.SequenceEqual(other.ScopedRules);
+    }
 
-            return RuleId == other.RuleId && ScopedRules.SequenceEqual(other.ScopedRules);
-        }
+    public override bool Equals(object? obj)
+    {
+        if (obj is not EditorConfigRule)
+            return false;
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is not EditorConfigRule)
-                return false;
+        return Equals((EditorConfigRule)obj);
+    }
 
-            return Equals((EditorConfigRule)obj);
-        }
+    public override int GetHashCode()
+    {
+        return RuleId.GetHashCode();
+    }
 
-        public override int GetHashCode()
-        {
-            return RuleId.GetHashCode();
-        }
+    public void AddScopedRule(EditorConfigScopedRule scopedRule)
+    {
+        _scopedRules.Add(scopedRule);
+    }
 
-        public void AddScopedRule(EditorConfigScopedRule scopedRule)
-        {
-            _scopedRules.Add(scopedRule);
-        }
+    public bool RemoveScopedRule(EditorConfigScopedRule scopedRule)
+    {
+        return _scopedRules.Remove(scopedRule);
+    }
 
-        public bool TryGetScopedRuleWithScope(IList<string> scopes, [NotNullWhen(true)] out EditorConfigScopedRule? scopedRule)
-        {
-            scopedRule = ScopedRules.FirstOrDefault(sr => sr.HasSameScopes(scopes));
-            return scopedRule != null;
-        }
+    public bool TryGetScopedRuleWithScope(IList<string> scopes, [NotNullWhen(true)] out EditorConfigScopedRule? scopedRule)
+    {
+        scopedRule = ScopedRules.FirstOrDefault(sr => sr.HasSameScopes(scopes));
+        return scopedRule != null;
     }
 }

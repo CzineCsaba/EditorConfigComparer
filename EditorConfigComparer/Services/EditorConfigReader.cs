@@ -1,11 +1,11 @@
 ﻿using System.Data;
 using System.IO;
 
-using EditorconfigComparer.Models;
+using EditorConfigComparer.Models;
 
 using EditorConfigComparer.Logging;
 
-namespace EditorconfigComparer.Services
+namespace EditorConfigComparer.Services
 {
     internal class EditorConfigReader : IEditorConfigReader
     {
@@ -76,6 +76,8 @@ namespace EditorconfigComparer.Services
                 }
             }
 
+            MergeScopedRules(config);
+
             return config;
         }
 
@@ -90,6 +92,10 @@ namespace EditorconfigComparer.Services
                     _logger.LogWarning($"Rule with same scope is defined multiple times. Rule: {ruleId}, Scope: {scopedRuleOut.FormattedScopes}");
                     scopedRule = scopedRuleOut;
                 }
+                else
+                {
+                    rule.AddScopedRule(scopedRule);
+                }
             }
             else
             {
@@ -99,6 +105,46 @@ namespace EditorconfigComparer.Services
             }
 
             return scopedRule;
+        }
+
+        private void MergeScopedRules(EditorConfig config)
+        {
+            foreach (EditorConfigRule rule in config.Rules.Values)
+            {
+                MergeScopedRules(rule);
+            }
+        }
+
+        private void MergeScopedRules(EditorConfigRule rule)
+        {
+            IList<EditorConfigScopedRule> newScopedRules = new List<EditorConfigScopedRule>();
+            IList<EditorConfigScopedRule> scopedRulesToRemove = new List<EditorConfigScopedRule>();
+            foreach(EditorConfigScopedRule scopedRule in rule.ScopedRules)
+            {
+                EditorConfigScopedRule? ruleWithSameValueAndSeverity = newScopedRules.FirstOrDefault(
+                    sr => sr.Value == scopedRule.Value && sr.Severity == scopedRule.Severity);
+                if (ruleWithSameValueAndSeverity != null)
+                {
+                    foreach (string scope in scopedRule.Scopes)
+                    {
+                        if (!ruleWithSameValueAndSeverity.Scopes.Contains(scope))
+                        {
+                            ruleWithSameValueAndSeverity.AddScope(scope);
+                        }
+                    }
+
+                    scopedRulesToRemove.Add(scopedRule);
+                }
+                else
+                {
+                    newScopedRules.Add(scopedRule);
+                }
+            }
+
+            foreach(EditorConfigScopedRule scopedRule in scopedRulesToRemove)
+            {
+                rule.RemoveScopedRule(scopedRule);
+            }
         }
     }
 }

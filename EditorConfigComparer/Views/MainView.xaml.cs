@@ -9,9 +9,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using EditorconfigComparer.ViewModels;
+using EditorConfigComparer.ViewModels;
 
-namespace EditorconfigComparer.Views
+namespace EditorConfigComparer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -37,9 +37,14 @@ namespace EditorconfigComparer.Views
             ViewModel.LoadRightFile();
         }
 
-        private void OnShowButtonClicked(object sender, RoutedEventArgs e)
+        private void SelectAllRulesOnTheLeft(object sender, RoutedEventArgs e)
         {
-            ViewModel.ProcessFiles();
+            ViewModel.SelectAllRulesOnTheLeft();
+        }
+
+        private void SelectAllRulesOnTheRight(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectAllRulesOnTheRight();
         }
     }
 }

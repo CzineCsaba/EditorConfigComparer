@@ -1,7 +1,7 @@
-﻿<Application x:Class="EditorconfigComparer.App"
+﻿<Application x:Class="EditorConfigComparer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:EditorconfigComparer"
+             xmlns:local="clr-namespace:EditorConfigComparer"
              StartupUri="Views/MainView.xaml">
     <Application.Resources>
          

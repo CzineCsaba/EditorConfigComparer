@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
 
-using EditorconfigComparer.Models;
-using EditorconfigComparer.Services;
+using EditorConfigComparer.Models;
+using EditorConfigComparer.Services;
 
 using Microsoft.Win32;
 
-namespace EditorconfigComparer.ViewModels;
+namespace EditorConfigComparer.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
@@ -15,7 +15,7 @@ public class MainViewModel : ViewModelBase
 
     private string _leftFilePath = string.Empty;
     private string _rightFilePath = string.Empty;
-    private ObservableCollection<EditorConfigRulePair> _rulePairs = new();
+    private ObservableCollection<RulePairViewModel> _rulePairs = new();
     private EditorConfig? _leftEditorConfig;
     private EditorConfig? _rightEditorConfig;
 
@@ -45,7 +45,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<EditorConfigRulePair> RulePairs
+    public ObservableCollection<RulePairViewModel> RulePairs
     {
         get => _rulePairs;
         private set
@@ -87,6 +87,35 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public bool IsSelectAllRulesEnabled
+    {
+        get => RulePairs.Count > 0;
+    }
+
+    internal void SelectAllRulesOnTheLeft()
+    {
+        foreach (var rulePair in RulePairs)
+        {
+            rulePair.IsRightSelected = false;
+            if (rulePair.LeftRule != null)
+            {
+                rulePair.IsLeftSelected = true;
+            }
+        }
+    }
+
+    internal void SelectAllRulesOnTheRight()
+    {
+        foreach (var rulePair in RulePairs)
+        {
+            rulePair.IsLeftSelected = false;
+            if (rulePair.RightRule != null)
+            {
+                rulePair.IsRightSelected = true;
+            }
+        }
+    }
+
     private void SelectFile(Action<string> setFilePath)
     {
         OpenFileDialog dialog = new OpenFileDialog();
@@ -108,10 +137,12 @@ public class MainViewModel : ViewModelBase
 
             IEnumerable<EditorConfigRulePair> rulePairs =
                 _configService.CreatePairs(_leftEditorConfig, _rightEditorConfig);
-            foreach (EditorConfigRulePair rulePair in rulePairs)
+            foreach (RulePairViewModel rulePair in rulePairs.Select(rp => new RulePairViewModel(rp)))
             {
                 RulePairs.Add(rulePair);
             }
+
+            RaisePropertyChanged(nameof(IsSelectAllRulesEnabled));
         }
     }
 }

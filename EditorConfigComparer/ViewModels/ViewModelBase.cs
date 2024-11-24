@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace EditorconfigComparer.ViewModels;
+namespace EditorConfigComparer.ViewModels;
 
 public class ViewModelBase : INotifyPropertyChanged
 {
