@@ -1,0 +1,65 @@
+﻿<Window x:Class="EditorconfigComparer.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EditorconfigComparer"
+        xmlns:models="clr-namespace:EditorconfigComparer.Models"
+        xmlns:views="clr-namespace:EditorconfigComparer.Views"
+        mc:Ignorable="d"
+        Title="Editorconfig Comparer" Height="800" Width="900">
+    <Window.Resources>
+        <DataTemplate x:Key="RulePairItemTemplate" DataType="{x:Type models:EditorConfigRulePair}">
+            <views:RulePairView></views:RulePairView>
+        </DataTemplate>
+
+        <Style x:Key="FilePathInputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Width" Value="350" />
+        </Style>
+
+        <Style x:Key="LoadFileButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Width" Value="52" />
+        </Style>
+
+        <Style x:Key="LoadButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Width" Value="100" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal">
+            <TextBox Text="{Binding LeftFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     Style="{StaticResource FilePathInputTextBoxStyle}" />
+            <Button Click="LoadLeftFile" Style="{StaticResource LoadFileButtonStyle}" >Load</Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <TextBox Text="{Binding RightFilePath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     Style="{StaticResource FilePathInputTextBoxStyle}" />
+            <Button Click="LoadRightFile" Style="{StaticResource LoadFileButtonStyle}">Load</Button>
+        </StackPanel>
+
+        <ListBox Grid.Row="1" Grid.ColumnSpan="2" Margin="4"
+                 ItemsSource="{Binding RulePairs, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                 ItemTemplate="{StaticResource RulePairItemTemplate}"
+                 HorizontalContentAlignment="Stretch">
+        </ListBox>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Click="OnShowButtonClicked" Style="{StaticResource LoadButtonStyle}">Show something</Button>
+        </StackPanel>
+    </Grid>
+</Window>
